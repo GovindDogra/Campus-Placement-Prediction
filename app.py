@@ -7,6 +7,7 @@ from sklearn.compose import ColumnTransformer
 # Reading two pickle models from pickle files
 model_voting=pickle.load(open('voting_classifier.pkl','rb'))
 col_transform=pickle.load(open('column_transformer.pkl','rb'))
+model_regression=pickle.load(open('Random_forest_reg.pkl','rb'))
 
 st.title("Student Campus Placement Prediction")
 
@@ -50,7 +51,13 @@ if st.button("Predict"):
     y_pred=model_voting.predict(input_data_transformed)
 
     # Displaying the result
-    if y_pred == 1:
+    # Displaying the result
+    if y_pred == 1:  # If placed
         st.success("Placed. Congrats.")
+        
+        # Predicting salary for placed student using the regression model
+        predicted_salary = model_regression.predict(input_data_transformed)
+        st.success(f"The predicted salary for the student is: ${predicted_salary[0]:.2f}")
+        
     else:
         st.error("Not Placed. Study Hard")
